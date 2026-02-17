@@ -2,16 +2,27 @@
 #include<NTL/tools.h>
 #include<NTL/vec_ZZ.h>
 #include<NTL/vec_ZZ_p.h>
-//#include<NTL/vector.h>
+#include<NTL/vector.h>
 
+constexpr const PRIME_BIT  = 60;
+constexpr const Err_bound =  80;
 using namespace NTL;
+
+/* O(n^2) compute for toeplitz matrix with input vector Benchmarking against Cooley method */
+
+/*
+void mul_norm(vec_ZZ_p &input, vec_ZZ_p &toep_mat, int n){
+
+    for(long i{};i<n;++i){
+
+    }
+
+}
+*/
 
 int main(){
 
-
   ZZ p;
-  long  k = 60;
-  long err = 80;
   GenPrime(p ,k ,err);
   ZZ_p::init(p);
   long n = RandomBnd(1024) + 1;
