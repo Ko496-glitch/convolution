@@ -10,9 +10,11 @@
 
 constexpr const long PRIME_BIT  = 60;
 constexpr const long ERR_BOUND =  80;
+double total_time{};
+
+using namespace std;
 using namespace NTL;
 
-long long total_time{};
 std::vector<std::pair<long,long double>>global;
 /* O(n^2) compute for toeplitz matrix with input vector Benchmarking against Cooley method */
 /* from 1d -> 2d we use V[(n-1) + ( j- i) * xj)] j: 0 -> n */
@@ -101,11 +103,8 @@ int main(){
   long t = 8;
   SetSeed(to_ZZ(time(nullptr)));
 
-
-
-  while(t--){
-
-      long n = (RandomBnd(10)+1) * 100;
+  for(long g = 100;g< 1500;g+=250){
+      long n = g;
       vec_ZZ_p input;
 
       input.SetLength(n);
@@ -126,15 +125,15 @@ int main(){
 
   }
 
-  std::uint8_t total_time{};
+  std::cout << "\n";
 
+  std::cout << "FINAL SUMMARY ---------------------------------- " << std::endl;
   for(auto&[n,final_time]:global){
       total_time += final_time;
-      std::cout << "for n: " << n << " Time taken: " << final_time << std::endl;
-
+      std::cout << "For n: " << n <<  "      " << "   Time taken: " << final_time << std::endl;
   }
-
-  std::cout << "Total time taken: " << total_time << std::endl;
+  std::cout << "\n";
+  std::cout << "Total time taken: " << " "  <<  total_time << std::endl;
 
   return 0;
 }
