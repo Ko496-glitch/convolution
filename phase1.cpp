@@ -103,26 +103,34 @@ int main(){
   long t = 8;
   SetSeed(to_ZZ(time(nullptr)));
 
-  for(long g = 100;g< 1500;g+=250){
-      long n = g;
-      vec_ZZ_p input;
+  long start,step,end;
 
-      input.SetLength(n);
+  std::cout << "Please Enter the Start value: " << std::endl;
+  std::cin >> start;
+  std::cout << "Please Enter the Step value: " <<  std::endl;
+  std::cin >> step;
+  std::cout << "Please Enter the End value: "  <<  std::endl;
+  std::cin >> end;
 
-      for(long i{};i< n; ++i){
-        random(input[i]);
-      }
 
-      vec_ZZ_p toep_mat;
+  while(start != end){
 
-      toep_mat.SetLength(2*n-1);
+       vec_ZZ_p input;
+       input.SetLength(start);
 
-      for(long i{};i<2*n-1;++i){
-        random(toep_mat[i]);
-      }
-      print_matrix(toep_mat, n);
-      routine_check(toep_mat,input, n, mul_norm);
+       for(long i{};i< start; ++i){
+         random(input[i]);
+       }
+       vec_ZZ_p toep_mat;
 
+       toep_mat.SetLength(2*start-1);
+
+       for(long i{};i<2*start-1;++i){
+         random(toep_mat[i]);
+       }
+       print_matrix(toep_mat, start);
+       routine_check(toep_mat,input, start, mul_norm);
+       start += step;
   }
 
   std::cout << "\n";
