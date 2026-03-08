@@ -1,4 +1,2 @@
-echo "# Convolution Research (NTL + FFT + Toeplitz)" > README.md
-echo "# Convolution Research (NTL + FFT + Toeplitz)" > README.md
-echo "# Convolution Research (NTL + FFT + Toeplitz)" > README.md
-
+FFT using topelitz Matrix embedded in a Larger
+Circulent Matrix via Convolution Theoram
