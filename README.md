@@ -1,2 +1,2 @@
-FFT using topelitz Matrix embedded in a Larger
-Circulent Matrix via Convolution Theoram
+FFT using Toeplitz Matrix embedded in a Larger Circulant Matrix via Convolution Theorem.
+Research project under the supervision of Jeremy Johnson.
