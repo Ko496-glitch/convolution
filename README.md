@@ -47,54 +47,52 @@ convolution/
 │   └── rust_utils/
 │       └── mod.rs
 
----
+
 
 ## ⚙️ C++ Development Guidelines (LLVM/NTL)
 
-| Feature | Implementation | Goal |
-| :--- | :--- | :--- |
-| **Static Polymorphism** | Use **CRTP** over `virtual` functions | Ensure compile-time inlining & zero vtable overhead |
-| **Member Ordering** | Order by size (**Largest → Smallest**) | Eliminate internal memory padding |
-| **Cache Alignment** | Apply `alignas(64)` to core structures | Optimal cache-line alignment & fetch speed |
-| **Empty Base Opt.** | Use `[[no_unique_address]]` | Zero-byte overhead for stateless classes |
-| **Pointer Aliasing** | Mark math kernels with `__restrict__` | Enable aggressive SIMD auto-vectorization |
-| **Modern Modules** | Use **.ixx / .cppm** (C++20) | Stop header bloat and NTL macro leakage |
-| **Template Logic** | Use `std::concepts` / `requires` | Clearer constraints over SFINAE |
-| **Global State** | Use `inline constexpr` (no `extern`) | Avoid Static Initialization Order Fiasco |
-| **Hot Path Alloc** | Pass pre-allocated workspace buffers | Zero `malloc`/`new` in benchmark loops |
-| **Exception Spec** | Mark kernels `noexcept` | Skip unnecessary stack-unwinding logic |
-| **Branch Hints** | Use `[[likely]]` / `[[unlikely]]` | Guide the CPU branch predictor |
-| **Complexity** | **Rule of Seven**: Max 7–10 members | Decompose large classes into smaller structs |
-| **Const-Correctness** | Pass NTL types by `const &` | Prevent expensive deep copies of fields/vectors |
+- Static Polymorphism: Use CRTP instead of virtual functions to ensure compile-time inlining.
+- Member Ordering: Order members by size (largest to smallest) to eliminate internal padding.
+- Cache Alignment: Apply alignas(64) to core structures for optimal cache-line performance.
+- Empty Base Optimization: Use [[no_unique_address]] for stateless classes to ensure zero-byte overhead.
+- Pointer Aliasing: Mark math kernel pointers with __restrict__ to enable SIMD auto-vectorization.
+- C++20 Modules: Use .ixx / .cppm to stop header bloat and NTL macro leakage.
+- Concepts: Use std::concepts for template constraints instead of SFINAE.
+- No Externs: Use inline constexpr for globals to avoid static initialization order issues.
+- No Hidden Allocations: Pass pre-allocated workspace buffers to avoid malloc in the hot path.
+- Noexcept: Mark all math kernels noexcept to skip unnecessary stack-unwinding logic.
+- Branch Hints: Use [[likely]] / [[unlikely]] to guide the CPU branch predictor.
+- Rule of Seven: Break down any class with more than 7–10 members into smaller structs.
+- Const-Correctness: Pass NTL types by const & to prevent expensive deep copies.
+- API: All major computation APIs will be used from NTL.
 
 ---
 
 ## 🦀 Rust Development Guidelines (Nalgebra)
 
-| Feature | Implementation | Goal |
-| :--- | :--- | :--- |
-| **Static Dispatch** | **Traits with Generics** (no `dyn`) | Compile-time monomorphization |
-| **Data Layout** | Use `#[repr(C)]` (Large → Small) | Predictable layout & eliminated padding |
-| **Zero-Sized Types** | Use ZSTs for stateless logic | Native zero-byte optimization |
-| **Nalgebra Storage** | Leverage `Storage` traits | Support both stack and heap-allocated data |
-| **Unsafe Protocol** | Required `// SAFETY:` comments | Explicit documentation of invariants |
-| **Performance** | Use **Raw Pointers** (`*const T`) | Bypass bounds checks in critical loops |
-| **Allocations** | Pass mutable slices `&mut [T]` | Prevent heap churn during timing |
-| **Inlining** | Apply `#[inline(always)]` | Assist LLVM in merging math operations |
-| **Error Handling** | Use `panic!` for internal invariants | Match C++ `assert` performance profile |
-| **Vectorization** | Utilize `std::simd` | Explicit SIMD where auto-vec falls short |
+- Static Dispatch: Use Traits with Generics instead of dyn to ensure compile-time monomorphization.
+- Data Layout: Use #[repr(C)] and order fields largest to smallest to eliminate padding.
+- Zero-Sized Types: Use ZSTs for stateless logic; Rust optimizes these to zero bytes automatically.
+- Nalgebra Storage: Use Storage traits so kernels work on both stack and heap data.
+- Unsafe Safety: Every unsafe block must have a // SAFETY: comment explaining the invariants.
+- Raw Pointers: Use *const T in hot loops to bypass bounds checks for maximum performance.
+- No Allocations: Pass mutable slices &mut [T] to avoid heap churn during benchmarks.
+- Inlining: Apply #[inline(always)] to small math kernels to help LLVM merge operations.
+- Error Handling: Use panic! for logic invariants to match C++ assert behavior.
+- SIMD Intrinsics: Use std::simd where nalgebra auto-vectorization falls short.
 
 ---
 
 ## 🛠 Toolchain & Compilation
 
-### 1. C++ Toolchain (LLVM/Clang)
-* **Compiler:** Latest **Clang** for cutting-edge C++20 features and optimization passes.
-* **Workflow:** Mandatory `clang-format` and `clang-tidy` (performance profile) after every commit.
-* **Analysis:** Built to support **Clang Front-end tools** (AST matchers) for automated research audits.
-* **Optimization Flags:** `-O3 -march=native -ffast-math` to capture peak CPU throughput.
+1) C++ Toolchain (LLVM/Clang)
+- Compiler: Latest Clang for C++20 features and optimization passes.
+- Formatting: Run clang-format after every commit for consistent style.
+- Static Analysis: Use clang-tidy for performance linting (copies, alignment).
+- Custom Tooling: Support for Clang Front-end tools (AST matchers).
+- Optimization Flags: -O3 -march=native -ffast-math.
 
-### 2. Rust Toolchain (rustc)
-* **Compiler:** Latest stable `rustc` via `cargo`.
-* **Linter:** `cargo clippy` to identify non-idiomatic code or performance regressions.
-* **Optimization:** Benchmarks must run with `--release` to enable the full LLVM pipeline.
+2) Rust Toolchain (rustc)
+- Compiler: Latest stable rustc via cargo.
+- Linter: Use cargo clippy to catch non-idiomatic code.
+- Optimization: Benchmark using --release mode for full LLVM pipeline.
