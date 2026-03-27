@@ -1,9 +1,11 @@
 const PRIME_BIT: usize = 60;
 const ERR_BOUND: usize = 80;
 
-let mut global: Vec<Vec<(usize, usize)>> = vec![vec![]];
 
-impl toeplitz{
+pub struct toeplitz {
+
+    pub let mut global: Vec<Vec<(usize, usize)>> = vec![vec![]];
+
     pub fn mul_norm(input: &Vec<usize>, toep_mat: &Vec<usize>, n: &usize) -> {
         let res: Vec<usize> = vec![;n];
         
