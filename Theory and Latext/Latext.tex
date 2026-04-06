@@ -122,5 +122,57 @@ $\text{Downshift} \longrightarrow \text{left-shift on } I_n$
 Proof:
 [\lets say we have input vector (g) 
 
-\end{document}
 
+\subsection{Cooley - Tookey's Method (for general form}
+This section will talk about the one of the ways FFT in order calculate DFT's
+
+We know for for general dft we have
+
+\[
+y_k = \sum_{n=0}^{N-1} x_n \, \omega_N^{k n}
+\]
+
+\text{now we take N = R} {\cdot S}
+
+\text{where R and S are the factors of N}
+
+We take $i^2 = -1$, and from Section~1 we know that
+\[
+1 + \omega + \omega^2 = 0.
+\]
+
+\[\]
+
+Now  for any F_n matrix we can have 
+\[D_n = \begin{bmatrix}
+    \omega^{i.j}  & \omega^{i.j+1}    & \omega^{i.j+2}   & \omega^{i.j+3}  \\ \omega^{i+1.j}   & \omega^{i+1.j+1}  & \omega^{i+1.j+2} & \omega^{i+1.j+3}   \\  \omega^{i+2.j}  & \omega^{i+2.j+1}  & \omega^{i+2.j+2} & \omega^{i+2.j+3}  \\ \omega^{i+3.j}  & \omega^{i+3.j+1}  & \omega^{i+3.j+2}  & \omega^{i+3.j+3} 
+\end{bmatrix}\]
+
+which if we take a 4*4 example then we have 
+
+\[C_4  = \begin{bmatrix}
+    1 &  1 & 1 & 1 \\ 1 & i & -1 & -i \\ 1 & -1 & 1 & -1 \\ 1 & -i & -1 & i 
+\end{bmatrix}\]
+
+\begin{align}
+y_0 &= x_0 + x_1 + x_2 + x_3 \\
+y_1 &= x_0 + i \cdot x_1 - x_2 - i \cdot x_3 \\
+y_2 &= x_0 - x_1 + x_2 - x_3 \\
+y_3 &= x_0 - i \cdot x_1 - x_2 + i \cdot x_3
+\end{align}
+
+For a general DFT we have:
+\begin{itemize}
+    \item Multiplications: $N^2$
+    \item Additions: $N(N-1)$
+\end{itemize}
+
+Please note that when we say additions, we also include subtractions, since
+\[
+a - b = a + (-b).
+\]
+
+So in this case we have 16 FLOPs.
+\textbf{Now we can already see the runtime O(n^{2})}
+
+\end{document}
