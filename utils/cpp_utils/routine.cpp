@@ -1,34 +1,40 @@
-module;
+#include <NTL/ZZ_p.h>
+#include <iostream>
+#include <fstream>
+#include "../../include/toeplitz.hpp"
+#include "../../include/routine.hpp"
+#include "../../include/print.hpp"
+using namespace std;
+using namespace NTL;
 
-#include<NTL/ZZ_p.h>
-#include<NTL/tools.h>
-#include<NTL/vec_ZZ.h>
-#include<NTL/vec_ZZ_p.h>
-#include<NTL/vector.h>
-#include<type_traits>
+namespace toeplitz {
+    std::vector<std::pair<long, long double>> global;
+}
 
-export module toeplitz;
+int main() {
+    NTL::ZZ_p::init(NTL::ZZ(786433));
+    long start = 500;     
+    long end   = 3000;   
+    long step  = 200;     
+    
+    while (start <= end) {
+        vec_ZZ_p input;
+        input.SetLength(start);
+        for (long i = 0; i < start; ++i) random(input[i]);
 
-import std;
-import NTL;
+        vec_ZZ_p toep_vec;
+        generate_toeplitz_data(toep_vec, start);
 
-/*
- * This is templated version of routine-check since we want it to be generic for different kinds of functions( different fft functions)
- * This uses NTL routine API.
- */
-
-export namespace Toeplitz{
-
-    template<typename Function>
-    requires std::invocable<Function, long, long>
-    void routine_check(const vec_ZZ_p &toep_mat, const vec_ZZ_p &input, long n, Func mul_function) noexcept(true){
-
-        long double curr_time = GetTime();
-        vec_ZZ_p mat  = mul_function(input,toep_mat, n);
-        long double final_time = GetTime() - curr_time;
-        global.push_back({n,final_time});
-        std::cout << "[ time:  " << final_time << "]" << std::endl;
-
+       toeplitz::routine_check(toep_vec, input, start, mul_norm_);
+       print_matrix(toep_vec,start);
+        start += step;
+        std::ofstream file("data.csv");
+        file << "n,time\n";
+        
+        for (const auto& [n, t] : toeplitz::global) {
+            file << n << "," << t << "\n";
+        }
+        
+        file.close();
     }
-
-} // namesapce Toeplitz
+}
