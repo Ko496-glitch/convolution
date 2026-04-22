@@ -1,0 +1,2 @@
+/usr/bin/ar qc libconvolution_core.a CMakeFiles/convolution_core.dir/toeplitz.cpp.o
+/usr/bin/ranlib libconvolution_core.a

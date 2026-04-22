@@ -1,54 +1,37 @@
-module;
-
 #include <NTL/vec_ZZ_p.h>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <string>
-#include <utility>
-#include<concepts>
-#include<type_traits>
 
-export module Toeplitz;
+void print_matrix(const NTL::vec_ZZ_p &toep_mat, long n) {
+  const int width = 30;
+  /*
+  auto print_separator = [&]() {
+      std::cout << "+";
+      for(long i = 0; i < n; ++i)
+          std::cout << std::string(width, '-') << "+";
+      std::cout << "\n";
+  };
 
-import std;
-import NTL;
 
+  print_separator();
 
-export namespace Toeplitz::Utils{
+  for(long i = 0; i < n; ++i) {
+      std::cout << "|";
 
-    template<typename Function>
-    requires std::invocable<Function,long, long>
-    void print_matrix(long n, Function toep_mat) noexcept(false){
-        const int width = 30;
+      for(long j = 0; j < n; ++j) {
+          long index = (n-1) + (j-i);
 
-        auto print_separator = [&]() {
-            std::cout << "+";
-            for(long i = 0; i < n; ++i)
-                std::cout << std::string(width, '-') << "+";
-            std::cout << "\n";
-        };
+          std::ostringstream oss;
+          oss << toep_mat[index];
+          std::string s = oss.str();
 
-        std::cout << "\n--- Toeplitz Matrix Verification (n=" << n << ") ---\n";
+          std::cout << std::setw(width) << s << "|";
+      }
 
-        print_separator();
-
-        for(long i = 0; i < n; ++i) {
-            std::cout << "|";
-
-            for(long j = 0; j < n; ++j) {
-                long index = (n-1) + (j-i);
-
-                std::ostringstream oss;
-                oss << toep_mat[index];
-                std::string s = oss.str();
-
-                std::cout << std::setw(width) << s << "|";
-            }
-
-            std::cout << "\n";
-            print_separator();
-        }
-    }
-
-}// namespace Toeplitz
+      std::cout << "\n";
+      print_separator();
+      }*/
+  std::cout << "\n--- For (n=" << n << " ) ---\n";
+}
