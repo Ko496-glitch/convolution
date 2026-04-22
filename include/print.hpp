@@ -1,6 +1,6 @@
 #include <NTL/vec_ZZ_p.h>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <string>
 
