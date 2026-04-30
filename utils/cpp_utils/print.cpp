@@ -33,5 +33,5 @@ void print_matrix(const NTL::vec_ZZ_p &toep_mat, long n) {
       std::cout << "\n";
       print_separator();
       }*/
-  std::cout << "\n--- For (n=" << n << " ) ---\n";
+  std::cout << "\n--- For (n = " << n << ") ---\n";
 }

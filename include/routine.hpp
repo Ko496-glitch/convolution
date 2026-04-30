@@ -26,7 +26,7 @@ void routine_check(const vec_ZZ_p &toep_mat, const vec_ZZ_p &input, long n,
 
   global.push_back({n, final_time});
 
-  std::cout << "n = " << n << ", time = " << final_time;
+  std::cout << "naive time = " << final_time;
 
   if (prev_time > 0.0) {
     long double percent = ((final_time - prev_time) / prev_time) * 100.0;
