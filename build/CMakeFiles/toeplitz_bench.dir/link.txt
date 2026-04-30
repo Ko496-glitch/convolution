@@ -1,0 +1,1 @@
+/usr/bin/clang++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/toeplitz_bench.dir/utils/cpp_utils/routine.cpp.o CMakeFiles/toeplitz_bench.dir/utils/cpp_utils/print.cpp.o -o toeplitz_bench  src/libconvolution_core.a /opt/homebrew/lib/libntl.dylib /opt/homebrew/lib/libgmp.dylib -lpthread /opt/homebrew/Cellar/fftw/3.3.10_3/lib/libfftw3.dylib
