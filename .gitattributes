@@ -1,0 +1,7 @@
+Makefile linguist-generated=true
+*.mk linguist-generated=true
+
+build/** linguist-vendored
+
+*.hpp linguist-language=cpp
+*.cpp linguist-language=cpp
