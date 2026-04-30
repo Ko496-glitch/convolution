@@ -2,11 +2,11 @@
 #include <utility>
 #include <vector>
 
-#include <random> 
+#include <random>
 
 #include <NTL/tools.h>
 #include <NTL/vec_ZZ_p.h>
-#include <fftw3.h> 
+#include <fftw3.h>
 
 using namespace NTL;
 
@@ -35,11 +35,11 @@ vec_ZZ_p mul_norm_(const vec_ZZ_p &input, const vec_ZZ_p &tope_mat, long n) {
   return res;
 }
 
-void fftw_toeplitz_convolve(const double *input, const double *mat,
-                            double *output, int n) {
+void fftw_c2c(const double *input, const double *mat, double *output,
+                  int n) {
   int m = 1;
   while (m < 2 * n)
-    m <<= 1; // FIX
+    m <<= 1;
 
   fftw_complex *in_fft = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * m);
   fftw_complex *mat_fft = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * m);
@@ -47,7 +47,7 @@ void fftw_toeplitz_convolve(const double *input, const double *mat,
       (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * m);
 
   for (int i = 0; i < m; ++i) {
-    in_fft[i][0] = (i < n) ? input[i] : 0.0; // FIX
+    in_fft[i][0] = (i < n) ? input[i] : 0.0;
     in_fft[i][1] = 0.0;
 
     mat_fft[i][0] = 0.0;
@@ -58,7 +58,7 @@ void fftw_toeplitz_convolve(const double *input, const double *mat,
     mat_fft[i][0] = mat[(n - 1) - i];
   }
   for (int i = 0; i < n; ++i) {
-    mat_fft[m - n + i][0] = mat[(n - 1) + i]; // FIX
+    mat_fft[m - n + i][0] = mat[(n - 1) + i];
   }
 
   fftw_plan p_in =
@@ -68,19 +68,19 @@ void fftw_toeplitz_convolve(const double *input, const double *mat,
   fftw_plan p_inv =
       fftw_plan_dft_1d(m, output_fft, output_fft, FFTW_BACKWARD, FFTW_ESTIMATE);
 
-  fftw_execute(p_in);  // FIX
-  fftw_execute(p_mat); // FIX
+  fftw_execute(p_in);
+  fftw_execute(p_mat);
 
   for (int i = 0; i < m; ++i) {
     output_fft[i][0] =
-        in_fft[i][0] * mat_fft[i][0] - in_fft[i][1] * mat_fft[i][1]; // FIX
+        in_fft[i][0] * mat_fft[i][0] - in_fft[i][1] * mat_fft[i][1];
     output_fft[i][1] =
-        in_fft[i][0] * mat_fft[i][1] + in_fft[i][1] * mat_fft[i][0]; // FIX
+        in_fft[i][0] * mat_fft[i][1] + in_fft[i][1] * mat_fft[i][0];
   }
 
-  fftw_execute(p_inv); // FIX
+  fftw_execute(p_inv);
 
-  for (int i = 0; i < n; ++i) { // FIX: only first n outputs
+  for (int i = 0; i < n; ++i) {
     output[i] = output_fft[i][0] / m;
   }
 
@@ -90,4 +90,71 @@ void fftw_toeplitz_convolve(const double *input, const double *mat,
   fftw_free(in_fft);
   fftw_free(mat_fft);
   fftw_free(output_fft);
+}
+
+void fftw_real(const double *input, const double *mat, double *output, int n) {
+  int m = 1;
+  while (m < 2 * n)
+    m <<= 1;
+
+  double *in_fft = (double *)fftw_malloc(sizeof(double) * m);
+  double *mat_fft = (double *)fftw_malloc(sizeof(double) * m);
+  double *out_fft = (double *)fftw_malloc(sizeof(double) * m);
+
+  int size = (m / 2) + 1;
+
+  fftw_complex *in_freq =
+      (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * size);
+  fftw_complex *mat_freq =
+      (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * size);
+  fftw_complex *out_freq =
+      (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * size);
+
+  for (int i = 0; i < m; ++i) {
+    in_fft[i] = (i < n) ? input[i] : 0.0;
+    mat_fft[i] = 0.0;
+    out_fft[i] = 0.0;
+  }
+
+  for (int i = 0; i < n; ++i) {
+    mat_fft[i] = mat[(n - 1) - i];
+  }
+
+  for (int i = 1; i < n; ++i) {
+    mat_fft[m - i] = mat[(n - 1) + i];
+  }
+
+  fftw_plan p_in = fftw_plan_dft_r2c_1d(m, in_fft, in_freq, FFTW_ESTIMATE);
+  fftw_plan p_mat = fftw_plan_dft_r2c_1d(m, mat_fft, mat_freq, FFTW_ESTIMATE);
+  fftw_plan p_inv = fftw_plan_dft_c2r_1d(m, out_freq, out_fft, FFTW_ESTIMATE);
+
+  fftw_execute(p_in);
+  fftw_execute(p_mat);
+
+  for (int k = 0; k < size; ++k) {
+    double a = in_freq[k][0];
+    double b = in_freq[k][1];
+    double c = mat_freq[k][0];
+    double d = mat_freq[k][1];
+
+    out_freq[k][0] = a * c - b * d;
+    out_freq[k][1] = a * d + b * c;
+  }
+
+  fftw_execute(p_inv);
+
+  for (int i = 0; i < n; ++i) {
+    output[i] = out_fft[i] / m;
+  }
+
+  fftw_destroy_plan(p_in);
+  fftw_destroy_plan(p_mat);
+  fftw_destroy_plan(p_inv);
+
+  fftw_free(in_fft);
+  fftw_free(mat_fft);
+  fftw_free(out_fft);
+  fftw_free(in_freq);
+  fftw_free(mat_freq);
+  fftw_free(out_freq);
 }
