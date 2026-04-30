@@ -12,6 +12,7 @@ using namespace NTL;
 std::vector<long double> fftw_times_c2c;
 std::vector<long double> fftw_times_r2c;
 std::vector<long double> ntl_fft_times;
+vec_ZZ_p ntl_fft_out;
 namespace toeplitz {
 std::vector<std::pair<long, long double>> global;
 }
@@ -44,8 +45,6 @@ int main() {
     std::vector<double> mat_d(2 * start - 1);
     std::vector<double> output_d(start);
 
-    
-    
     for (long i = 0; i < start; ++i)
       input_d[i] = static_cast<double>(NTL::conv<long>(rep(input[i])));
 
@@ -76,9 +75,7 @@ int main() {
     long double avg_r2c = time / trials;
     fftw_times_r2c.push_back(avg_r2c);
     std::cout << "Time taken just to run fftw_real = " << avg_r2c << std::endl;
-    
-    vec_ZZ_p ntl_fft_out;
-    
+
     time = 0.0;
     for (int i = 0; i < trials; ++i) {
       long double t_ntl = GetTime();
@@ -87,18 +84,22 @@ int main() {
     }
     long double avg_ntl_fft = time / trials;
     ntl_fft_times.push_back(avg_ntl_fft);
-    std::cout << "Time taken just to run ntl_fft = " << avg_ntl_fft << std::endl;
+    std::cout << "Time taken just to run ntl_fft = " << avg_ntl_fft
+              << std::endl;
+    fftw_real(input_d.data(), mat_d.data(), output_d.data(), start);
+    compare_precision(output_d, ntl_fft_out, 786433);
     start += step;
   }
   std::ofstream file("build/data.csv");
 
   file << "n,naive,ntl_fft,fftw_c2c,fftw_r2c,"
-          "naive_over_nlogn,ntl_fft_over_nlogn,fftw_c2c_over_nlogn,fftw_r2c_over_nlogn,"
+          "naive_over_nlogn,ntl_fft_over_nlogn,fftw_c2c_over_nlogn,fftw_r2c_"
+          "over_nlogn,"
           "naive_over_n2\n";
 
   for (size_t i = 0; i < toeplitz::global.size(); ++i) {
     auto [n, naive_time] = toeplitz::global[i];
-    
+
     long double n_ld = static_cast<long double>(n);
     long double nlogn = n_ld * std::log2(n_ld);
     long double n2 = n_ld * n_ld;
@@ -107,10 +108,9 @@ int main() {
     long double fftw_r2c_time = fftw_times_r2c[i];
     long double ntl_fft_time = ntl_fft_times[i];
     file << n << "," << naive_time << "," << ntl_fft_time << ","
-         << fftw_c2c_time << "," << fftw_r2c_time << ","
-         << naive_time / nlogn << "," << ntl_fft_time / nlogn << ","
-         << fftw_c2c_time / nlogn << "," << fftw_r2c_time / nlogn << ","
-         << naive_time / n2 << "\n";
+         << fftw_c2c_time << "," << fftw_r2c_time << "," << naive_time / nlogn
+         << "," << ntl_fft_time / nlogn << "," << fftw_c2c_time / nlogn << ","
+         << fftw_r2c_time / nlogn << "," << naive_time / n2 << "\n";
   }
 
   file.close();

@@ -1,14 +1,14 @@
+#include <cmath>
+#include <cstdlib>
 #include <iostream>
+#include <random>
 #include <utility>
 #include <vector>
-
-#include <random>
 
 #include <NTL/ZZ_p.h>
 #include <NTL/ZZ_pX.h>
 #include <NTL/vec_ZZ_p.h>
 #include <fftw3.h>
-
 
 using namespace NTL;
 
@@ -39,7 +39,7 @@ vec_ZZ_p mul_norm_(const vec_ZZ_p &input, const vec_ZZ_p &tope_mat, long n) {
 
 void fftw_c2c(const double *input, const double *mat, double *output, int n) {
   int m = 1;
-  while (m < 2 * n)
+  while (m < 3 * n)
     m <<= 1;
 
   fftw_complex *in_fft = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * m);
@@ -58,8 +58,9 @@ void fftw_c2c(const double *input, const double *mat, double *output, int n) {
   for (int i = 0; i < n; ++i) {
     mat_fft[i][0] = mat[(n - 1) - i];
   }
-  for (int i = 0; i < n; ++i) {
-    mat_fft[m - n + i][0] = mat[(n - 1) + i];
+  
+  for (int j = 1; j < n; ++j) {
+    mat_fft[2 * n - j][0] = mat[(n - 1) + j];
   }
 
   fftw_plan p_in =
@@ -95,7 +96,7 @@ void fftw_c2c(const double *input, const double *mat, double *output, int n) {
 
 void fftw_real(const double *input, const double *mat, double *output, int n) {
   int m = 1;
-  while (m < 2 * n)
+  while (m < 3 * n)
     m <<= 1;
 
   double *in_fft = (double *)fftw_malloc(sizeof(double) * m);
@@ -120,9 +121,9 @@ void fftw_real(const double *input, const double *mat, double *output, int n) {
   for (int i = 0; i < n; ++i) {
     mat_fft[i] = mat[(n - 1) - i];
   }
-
-  for (int i = 1; i < n; ++i) {
-    mat_fft[m - i] = mat[(n - 1) + i];
+  
+  for (int j = 1; j < n; ++j) {
+    mat_fft[2 * n - j] = mat[(n - 1) + j];
   }
 
   fftw_plan p_in = fftw_plan_dft_r2c_1d(m, in_fft, in_freq, FFTW_ESTIMATE);
@@ -162,7 +163,6 @@ void fftw_real(const double *input, const double *mat, double *output, int n) {
 
 void ntl_fft(const NTL::vec_ZZ_p &input, const NTL::vec_ZZ_p &toep,
              NTL::vec_ZZ_p &output) {
-  using namespace NTL;
 
   const long n = input.length();
 
@@ -195,4 +195,41 @@ void ntl_fft(const NTL::vec_ZZ_p &input, const NTL::vec_ZZ_p &toep,
   for (long i = 0; i < n; ++i) {
     output[i] = coeff(prod, i);
   }
+}
+
+long mod_normalize_ll(long long x, long mod) {
+  long long r = x % mod;
+  if (r < 0)
+    r += mod;
+  return static_cast<long>(r);
+}
+
+void compare_precision(const std::vector<double>& fftw_out,
+                       const NTL::vec_ZZ_p& ntl_out,
+                       long mod) {
+  long mismatches = 0;
+  long max_error = 0;
+  long double avg_error = 0.0;
+
+  for (long i = 0; i < ntl_out.length(); ++i) {
+    long long rounded = std::llround(fftw_out[i]);
+    long fftw_val = mod_normalize_ll(rounded, mod);
+    long ntl_val = NTL::conv<long>(NTL::rep(ntl_out[i]));
+
+    long diff = std::labs(fftw_val - ntl_val);
+    diff = std::min(diff, mod - diff);
+
+    if (diff != 0)
+      ++mismatches;
+
+    max_error = std::max(max_error, diff);
+    avg_error += diff;
+  }
+
+  avg_error /= ntl_out.length();
+
+  std::cout << "FFTW vs NTL precision:\n";
+  std::cout << "mismatches = " << mismatches << "\n";
+  std::cout << "max_error = " << max_error << "\n";
+  std::cout << "avg_error = " << avg_error << "\n";
 }

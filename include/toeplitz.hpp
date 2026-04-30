@@ -20,3 +20,8 @@ void fftw_real(const double *input, const double *kernel, double *output,
 
 void ntl_fft(const NTL::vec_ZZ_p &input, const NTL::vec_ZZ_p &toep,
              NTL::vec_ZZ_p &output);
+
+void compare_precision(const std::vector<double>& fftw_out,
+                       const NTL::vec_ZZ_p& ntl_out,
+                       long mod);
+long mod_normalize(long x, long mod);
