@@ -4,9 +4,11 @@
 
 #include <random>
 
-#include <NTL/tools.h>
+#include <NTL/ZZ_p.h>
+#include <NTL/ZZ_pX.h>
 #include <NTL/vec_ZZ_p.h>
 #include <fftw3.h>
+
 
 using namespace NTL;
 
@@ -35,8 +37,7 @@ vec_ZZ_p mul_norm_(const vec_ZZ_p &input, const vec_ZZ_p &tope_mat, long n) {
   return res;
 }
 
-void fftw_c2c(const double *input, const double *mat, double *output,
-                  int n) {
+void fftw_c2c(const double *input, const double *mat, double *output, int n) {
   int m = 1;
   while (m < 2 * n)
     m <<= 1;
@@ -157,4 +158,41 @@ void fftw_real(const double *input, const double *mat, double *output, int n) {
   fftw_free(in_freq);
   fftw_free(mat_freq);
   fftw_free(out_freq);
+}
+
+void ntl_fft(const NTL::vec_ZZ_p &input, const NTL::vec_ZZ_p &toep,
+             NTL::vec_ZZ_p &output) {
+  using namespace NTL;
+
+  const long n = input.length();
+
+  if (toep.length() != 2 * n - 1) {
+    throw std::runtime_error("toep length must be 2n - 1");
+  }
+
+  ZZ_pX c_poly;
+  ZZ_pX x_poly;
+
+  for (long i = 0; i < n; ++i) {
+    SetCoeff(c_poly, i, toep[(n - 1) - i]);
+  }
+
+  SetCoeff(c_poly, n, ZZ_p(0));
+
+  for (long j = 1; j < n; ++j) {
+    SetCoeff(c_poly, 2 * n - j, toep[(n - 1) + j]);
+  }
+
+  for (long i = 0; i < n; ++i) {
+    SetCoeff(x_poly, i, input[i]);
+  }
+
+  ZZ_pX prod;
+  mul(prod, c_poly, x_poly);
+
+  output.SetLength(n);
+
+  for (long i = 0; i < n; ++i) {
+    output[i] = coeff(prod, i);
+  }
 }

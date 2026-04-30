@@ -24,7 +24,10 @@ pkg_check_modules(FFTW3 REQUIRED IMPORTED_TARGET fftw3)
 
 find_library(NTL_LIB ntl REQUIRED PATHS /opt/homebrew/opt/ntl/lib)
 find_library(GMP_LIB gmp REQUIRED PATHS /opt/homebrew/opt/gmp/lib)
+set(LINBOX_ROOT "$ENV{HOME}/local/linbox")
 
+include_directories(${LINBOX_ROOT}/include)
+link_directories(${LINBOX_ROOT}/lib)
 add_subdirectory(src)
 
 add_executable(toeplitz_bench
@@ -36,6 +39,7 @@ target_include_directories(toeplitz_bench PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     /opt/homebrew/opt/ntl/include
     /opt/homebrew/opt/fftw/include
+    $ENV{HOME}/local/linbox/include
 )
 
 target_link_libraries(toeplitz_bench
