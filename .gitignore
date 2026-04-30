@@ -1,6 +1,4 @@
-# ========================
-# Build / CMake
-# ========================
+
 build/
 cmake-build-*/
 CMakeFiles/
@@ -9,7 +7,6 @@ compile_commands.json
 Makefile
 *.cmake
 
-# Binaries
 *.o
 *.obj
 *.out
@@ -18,48 +15,27 @@ Makefile
 *.so
 *.dylib
 
-# ========================
-# Python
-# ========================
+
 .venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# matplotlib cache (sometimes appears)
 .matplotlib/
 
-# ========================
-# Rust
-# ========================
 target/
-Cargo.lock  # remove this line if you want reproducible builds
+Cargo.lock 
 
-# ========================
-# macOS junk
-# ========================
 .DS_Store
 
-# ========================
-# Logs / temp
-# ========================
 *.log
 *.tmp
 
-# ========================
-# Generated data (IMPORTANT for your project)
-# ========================
 *.csv
 
-# ========================
-# Editor / IDE
-# ========================
 .vscode/
 .idea/
 
-# ========================
-# Misc
-# ========================
 *.swp
 *~

@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/kartikohlan/convolution/build/cmake_install.cmake",
-		"/Users/kartikohlan/convolution/build/src/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
