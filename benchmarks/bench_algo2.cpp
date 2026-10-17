@@ -1,4 +1,5 @@
 
+#include "convolution/butterfly/harvey.hpp"
 #include <NTL/ZZ.h>
 #include <NTL/Tools.h>
 
@@ -15,29 +16,6 @@ using u128 = unsigned __int128;
 struct Butterfly {
     u64 x, y, w, wprime;
 };
-
-inline void harvey_algo2(
-    u64& x, u64& y,
-    u64 w, u64 wprime, u64 p
-) {
-    u64 xp = x + y;
-    if (xp >= p)
-        xp -= p;
-
-    u64 t = (x >= y) ? x - y : x + p - y;
-
-    u64 q = static_cast<u64>(
-        (u128(wprime) * t) >> 64
-    );
-
-    // Unsigned wraparound is intentional.
-    u64 yp = w * t - q * p;
-    if (yp >= p)
-        yp -= p;
-
-    x = xp;
-    y = yp;
-}
 
 u64 next_random(u64& state) {
     state ^= state >> 12;
@@ -80,7 +58,7 @@ int main(int argc, char** argv) {
     for (const auto& b : data) {
         u64 x = b.x, y = b.y;
 
-        harvey_algo2(x, y, b.w, b.wprime, p);
+        ntt::harvey_algo2(x, y, b.w, b.wprime, p);
 
         NTL::ZZ X = NTL::conv<NTL::ZZ>(
             static_cast<long>(b.x)
@@ -113,7 +91,7 @@ int main(int argc, char** argv) {
     auto run = [&]() {
         for (std::size_t r = 0; r < repeats; ++r) {
             for (auto& b : data) {
-                harvey_algo2(
+                ntt::harvey_algo2(
                     b.x, b.y, b.w, b.wprime, p
                 );
             }

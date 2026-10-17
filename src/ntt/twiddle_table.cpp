@@ -1,4 +1,4 @@
-#include "ntt/ntt.hpp"
+#include "convolution/ntt/ntt.hpp"
 #include <stdexcept>
 #include <utility>
 

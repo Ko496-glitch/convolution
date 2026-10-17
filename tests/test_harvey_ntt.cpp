@@ -1,4 +1,4 @@
-#include "ntt/ntt.hpp"
+#include "convolution/ntt/ntt.hpp"
 #include <NTL/ZZ_p.h>
 #include <cassert>
 #include <iostream>
@@ -13,7 +13,7 @@ int main() {
     ntt::forward_ntt(actual, p, table);
 
     // Independent O(n^2) definition of the NTT using NTL field arithmetic.
-    NTL::ZZ_p::init(NTL::to_ZZ(p));
+    NTL::ZZ_p::init(NTL::to_ZZ(static_cast<long>(p)));
     const NTL::ZZ_p omega = NTL::to_ZZ_p(static_cast<long>(ntt::mod_pow(generator, (p-1)/n, p)));
     for (u64 k = 0; k < n; ++k) {
         NTL::ZZ_p expected = NTL::to_ZZ_p(0);
@@ -21,7 +21,12 @@ int main() {
             expected += NTL::to_ZZ_p(static_cast<long>(input[j])) * NTL::power(omega, static_cast<long>(j*k));
         }
         const u64 expected_u64 = static_cast<u64>(NTL::conv<long>(NTL::rep(expected)));
-        assert(actual[k] == expected_u64);
+        if (actual[k] != expected_u64) {
+            std::cerr << "NTT mismatch at index " << k
+                      << ": got " << actual[k]
+                      << ", expected " << expected_u64 << '\n';
+            return 1;
+        }
     }
     std::cout << "PASS: 8-point NTT matches direct NTL DFT modulo 17\n";
     for (u64 x : actual) std::cout << x << ' ';

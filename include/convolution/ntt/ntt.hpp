@@ -14,6 +14,5 @@ u64 reverse_index(u64 index, unsigned bits);
 void bit_reverse(std::vector<u64>& a);
 u64 mod_pow(u64 base, u64 exp, u64 p);
 TwiddleTable make_twiddle_table(u64 n, u64 p, u64 generator);
-void harvey_algo2(u64& x, u64& y, u64 w, u64 wprime, u64 p);
 void forward_ntt(std::vector<u64>& a, u64 p, const TwiddleTable& table);
 } // namespace ntt

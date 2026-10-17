@@ -1,4 +1,4 @@
-#include "ntt/ntt.hpp"
+#include "convolution/butterfly/harvey.hpp"
 
 namespace ntt {
 // Preconditions: x,y,w in [0,p), p<2^62, wprime=floor(w*2^64/p).
