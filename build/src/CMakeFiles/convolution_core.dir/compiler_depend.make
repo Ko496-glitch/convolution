@@ -1008,6 +1008,7 @@ src/CMakeFiles/convolution_core.dir/toeplitz.cpp.o: /Users/kartikohlan/convoluti
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/16/include/stdint.h \
   /opt/homebrew/Cellar/fftw/3.3.10_3/include/fftw3.h \
   /opt/homebrew/opt/ntl/include/NTL/ALL_FEATURES.h \
+  /opt/homebrew/opt/ntl/include/NTL/FFT.h \
   /opt/homebrew/opt/ntl/include/NTL/HAVE_AES_NI.h \
   /opt/homebrew/opt/ntl/include/NTL/HAVE_ALIGNED_ARRAY.h \
   /opt/homebrew/opt/ntl/include/NTL/HAVE_AVX.h \
@@ -1025,28 +1026,38 @@ src/CMakeFiles/convolution_core.dir/toeplitz.cpp.o: /Users/kartikohlan/convoluti
   /opt/homebrew/opt/ntl/include/NTL/HAVE_POSIX_TIME.h \
   /opt/homebrew/opt/ntl/include/NTL/HAVE_SSSE3.h \
   /opt/homebrew/opt/ntl/include/NTL/Lazy.h \
+  /opt/homebrew/opt/ntl/include/NTL/LazyTable.h \
   /opt/homebrew/opt/ntl/include/NTL/PackageInfo.h \
   /opt/homebrew/opt/ntl/include/NTL/SmartPtr.h \
   /opt/homebrew/opt/ntl/include/NTL/ZZ.h \
   /opt/homebrew/opt/ntl/include/NTL/ZZVec.h \
   /opt/homebrew/opt/ntl/include/NTL/ZZ_p.h \
+  /opt/homebrew/opt/ntl/include/NTL/ZZ_pX.h \
   /opt/homebrew/opt/ntl/include/NTL/config.h \
   /opt/homebrew/opt/ntl/include/NTL/ctools.h \
   /opt/homebrew/opt/ntl/include/NTL/gmp_aux.h \
   /opt/homebrew/opt/ntl/include/NTL/lip.h \
   /opt/homebrew/opt/ntl/include/NTL/mach_desc.h \
+  /opt/homebrew/opt/ntl/include/NTL/mat_ZZ_p.h \
+  /opt/homebrew/opt/ntl/include/NTL/matrix.h \
   /opt/homebrew/opt/ntl/include/NTL/new.h \
   /opt/homebrew/opt/ntl/include/NTL/sp_arith.h \
   /opt/homebrew/opt/ntl/include/NTL/thread.h \
   /opt/homebrew/opt/ntl/include/NTL/tools.h \
   /opt/homebrew/opt/ntl/include/NTL/vec_ZZ.h \
   /opt/homebrew/opt/ntl/include/NTL/vec_ZZ_p.h \
+  /opt/homebrew/opt/ntl/include/NTL/vec_long.h \
+  /opt/homebrew/opt/ntl/include/NTL/vec_vec_ZZ_p.h \
   /opt/homebrew/opt/ntl/include/NTL/vector.h
 
 
 /opt/homebrew/opt/ntl/include/NTL/vector.h:
 
+/opt/homebrew/opt/ntl/include/NTL/vec_vec_ZZ_p.h:
+
 /opt/homebrew/opt/ntl/include/NTL/vec_ZZ.h:
+
+/opt/homebrew/opt/ntl/include/NTL/vec_long.h:
 
 /opt/homebrew/opt/ntl/include/NTL/thread.h:
 
@@ -1054,7 +1065,11 @@ src/CMakeFiles/convolution_core.dir/toeplitz.cpp.o: /Users/kartikohlan/convoluti
 
 /opt/homebrew/opt/ntl/include/NTL/gmp_aux.h:
 
+/opt/homebrew/opt/ntl/include/NTL/ZZ_pX.h:
+
 /opt/homebrew/opt/ntl/include/NTL/ZZVec.h:
+
+/opt/homebrew/opt/ntl/include/NTL/LazyTable.h:
 
 /opt/homebrew/opt/ntl/include/NTL/HAVE_SSSE3.h:
 
@@ -1077,6 +1092,8 @@ src/CMakeFiles/convolution_core.dir/toeplitz.cpp.o: /Users/kartikohlan/convoluti
 /opt/homebrew/opt/ntl/include/NTL/HAVE_AVX.h:
 
 /opt/homebrew/opt/ntl/include/NTL/HAVE_ALIGNED_ARRAY.h:
+
+/opt/homebrew/opt/ntl/include/NTL/FFT.h:
 
 /opt/homebrew/Cellar/fftw/3.3.10_3/include/fftw3.h:
 
@@ -1679,6 +1696,8 @@ src/CMakeFiles/convolution_core.dir/toeplitz.cpp.o: /Users/kartikohlan/convoluti
 /opt/homebrew/opt/ntl/include/NTL/ZZ_p.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__random/normal_distribution.h:
+
+/opt/homebrew/opt/ntl/include/NTL/mat_ZZ_p.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/is_allocator.h:
 
@@ -3053,6 +3072,8 @@ src/CMakeFiles/convolution_core.dir/toeplitz.cpp.o: /Users/kartikohlan/convoluti
 /opt/homebrew/opt/ntl/include/NTL/ZZ.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/temporary_buffer.h:
+
+/opt/homebrew/opt/ntl/include/NTL/matrix.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/ranges_generate.h:
 

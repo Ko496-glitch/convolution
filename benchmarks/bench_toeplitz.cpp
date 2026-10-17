@@ -1,6 +1,6 @@
-#include "../../include/routine.hpp"
-#include "../../include/print.hpp"
-#include "../../include/toeplitz.hpp"
+#include "routine.hpp"
+#include "print.hpp"
+#include "toeplitz.hpp"
 #include <NTL/ZZ_p.h>
 #include <NTL/ZZ_pX.h>
 #include <cmath>

@@ -31,7 +31,7 @@ link_directories(${LINBOX_ROOT}/lib)
 add_subdirectory(src)
 
 add_executable(toeplitz_bench
-    utils/cpp_utils/routine.cpp
+    benchmarks/bench_toeplitz.cpp
     utils/cpp_utils/print.cpp
 )
 
@@ -49,4 +49,64 @@ target_link_libraries(toeplitz_bench
         ${NTL_LIB}
         ${GMP_LIB}
         pthread
+)
+
+# Harvey Algorithm 2 benchmark
+add_executable(harvey_algo2_bench
+    benchmarks/bench_algo2.cpp
+)
+
+target_include_directories(harvey_algo2_bench PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+    /opt/homebrew/opt/ntl/include
+)
+
+target_link_libraries(harvey_algo2_bench PRIVATE
+    ${NTL_LIB}
+    ${GMP_LIB}
+)
+
+add_executable(harvey_fft_bench
+    benchmarks/bench_harvey_ntt.cpp
+)
+
+target_link_libraries(harvey_fft_bench
+    PRIVATE
+        ${NTL_LIB}
+        ${GMP_LIB}
+)
+
+target_include_directories(harvey_fft_bench PRIVATE
+    /opt/homebrew/opt/ntl/include
+)
+
+add_library(harvey_ntt
+    src/butterfly/harvey_algo2.cpp
+    src/ntt/ntt.cpp
+    src/ntt/bit_reverse.cpp
+    src/ntt/twiddle_table.cpp
+)
+
+target_include_directories(harvey_ntt PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+add_executable(test_harvey_ntt
+    tests/test_harvey_ntt.cpp
+)
+
+target_link_libraries(test_harvey_ntt PRIVATE
+    harvey_ntt
+    ${NTL_LIB}
+    ${GMP_LIB}
+)
+
+enable_testing()
+add_test(NAME harvey_ntt_correctness COMMAND test_harvey_ntt)
+
+
+target_link_libraries(harvey_algo2_bench PRIVATE
+    harvey_ntt
+    ${NTL_LIB}
+    ${GMP_LIB}
 )
