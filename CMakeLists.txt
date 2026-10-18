@@ -55,6 +55,10 @@ target_link_libraries(toeplitz_bench
 add_executable(harvey_algo2_bench
     benchmarks/bench_algo2.cpp
 )
+set(COUNTERS_INSTALL OFF CACHE BOOL "" FORCE)
+add_subdirectory(external/counters)
+
+target_link_libraries(harvey_algo2_bench PRIVATE counters::counters)
 
 target_include_directories(harvey_algo2_bench PRIVATE
     ${CMAKE_SOURCE_DIR}/include
@@ -85,6 +89,7 @@ add_library(harvey_ntt
     src/ntt/ntt.cpp
     src/ntt/bit_reverse.cpp
     src/ntt/twiddle_table.cpp
+    src/butterfly/harvey_algo2_barrett.cpp
 )
 
 target_include_directories(harvey_ntt PUBLIC
@@ -109,4 +114,16 @@ target_link_libraries(harvey_algo2_bench PRIVATE
     harvey_ntt
     ${NTL_LIB}
     ${GMP_LIB}
+)
+
+add_executable(
+    butterfly_counters_bench
+    benchmarks/bench_butterfly_counters.cpp
+)
+
+target_link_libraries(
+    butterfly_counters_bench
+    PRIVATE
+    harvey_ntt
+    counters::counters
 )

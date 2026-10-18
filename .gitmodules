@@ -1,0 +1,3 @@
+[submodule "external/counters"]
+	path = external/counters
+	url = https://github.com/lemire/counters.git
